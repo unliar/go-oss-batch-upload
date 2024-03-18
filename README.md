@@ -15,7 +15,7 @@ go install github.com/unliar/go-oss-batch-upload
 **使用**
 
 ```
-oss-batch-uploader -access-key-id your-access-key-id -access-key-secret your-access-key-secret -endpoint your-endpoint -resource-dir /path/to/resource/dir -path-prefix subdir -bucket-name my-bucket
+go-oss-batch-upload -access-key-id your-access-key-id -access-key-secret your-access-key-secret -endpoint your-endpoint -resource-dir /path/to/resource/dir -path-prefix subdir -bucket-name my-bucket
 ```
 
 **参数**
@@ -31,7 +31,7 @@ oss-batch-uploader -access-key-id your-access-key-id -access-key-secret your-acc
 **示例**
 
 ```
-oss-batch-uploader -access-key-id AKID... -access-key-secret YOUR_ACCESS_KEY_SECRET -endpoint oss-cn-hangzhou.aliyuncs.com -resource-dir /path/to/resource/dir -path-prefix subdir -bucket-name my-bucket
+go-oss-batch-upload -access-key-id AKID... -access-key-secret YOUR_ACCESS_KEY_SECRET -endpoint oss-cn-hangzhou.aliyuncs.com -resource-dir /path/to/resource/dir -path-prefix subdir -bucket-name my-bucket
 ```
 
 **注意**
@@ -70,7 +70,7 @@ oss-batch-uploader -access-key-id your-access-key-id -access-key-secret your-acc
 **Example**
 
 ```
-oss-batch-uploader -access-key-id AKID... -access-key-secret YOUR_ACCESS_KEY_SECRET -endpoint oss-cn-hangzhou.aliyuncs.com -resource-dir /path/to/resource/dir -path-prefix subdir -bucket-name my-bucket
+go-oss-batch-upload -access-key-id AKID... -access-key-secret YOUR_ACCESS_KEY_SECRET -endpoint oss-cn-hangzhou.aliyuncs.com -resource-dir /path/to/resource/dir -path-prefix subdir -bucket-name my-bucket
 ```
 
 **Notes**
