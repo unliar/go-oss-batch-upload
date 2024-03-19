@@ -19,9 +19,20 @@ jobs:
           docker build -t go-oss-batch-upload:$TAG .
           docker tag go-oss-batch-upload:$TAG $REGISTRY/$TAG
           docker push $REGISTRY/$TAG
-      - name: "构建失败 - 通知远浅排查问题"
-        if: failure()
-        run: curl -H "Content-Type:application/json" -X POST ${{ secrets.SEND_MAIL_API }} -d '{"text":"【基础镜像 minio-server】 构建失败", "desp":"构建失败啦! https://github.com/${{ github.repository }}/actions","to":"${{ secrets.EMAIL }}"}'
-      - name: "构建成功 - 通知远浅让他开心"
-        if: success()
-        run: curl -H "Content-Type:application/json" -X POST ${{ secrets.SEND_MAIL_API }} -d '{"text":"【基础镜像 minio-server】 优雅的构建成功~!", "desp":"镜像 registry.cn-shenzhen.aliyuncs.com/happysooner/go-oss-batch-upload:${{ github.ref#refs/tags/ }} 更新啦","to":"${{ secrets.EMAIL }}"}'
+      - name: feishu-bot-message
+        if: always()
+        uses: foxundermoon/feishu-action@v2
+        with:
+            url: ${{ secrets.FEISHU_BOT_WEBHOOK_URL }}
+            msg_type: text
+            content: |
+              text: |
+                🐳 构建状态 - From Github Action 
+              
+                repository: https://github.com/${{ github.repository }}
+              
+                committer: https://github.com/${{ github.actor }}
+              
+                compare: ${{ github.event.compare }}
+              
+                job status: ${{ job.status }}
