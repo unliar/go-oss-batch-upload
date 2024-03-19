@@ -15,7 +15,7 @@ jobs:
       - name: "容器构建"
         run: |
           docker login --username=${{ secrets.DOCKER_USERNAME }} $REGISTRY --password=${{ secrets.DOCKER_PASSWORD }}
-          TAG="happysooner/go-oss-batch-upload:${{ github.event.release.tag_name }}"
+          TAG="happysooner/go-oss-batch-upload:${{ github.ref_name }}"
           echo $TAG
           docker build -t go-oss-batch-upload:latest .
           docker tag go-oss-batch-upload:latest $REGISTRY/$TAG
