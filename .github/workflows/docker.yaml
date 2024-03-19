@@ -16,8 +16,8 @@ jobs:
         run: |
           docker login --username=${{ secrets.DOCKER_USERNAME }} $REGISTRY --password=${{ secrets.DOCKER_PASSWORD }}
           TAG="happysooner/go-oss-batch-upload:${{ github.event.release.tag_name }}"
-          docker build -t go-oss-batch-upload:$TAG .
-          docker tag go-oss-batch-upload:$TAG $REGISTRY/$TAG
+          docker build -t go-oss-batch-upload:latest .
+          docker tag go-oss-batch-upload:latest $REGISTRY/$TAG
           docker push $REGISTRY/$TAG
       - name: feishu-bot-message
         if: always()
