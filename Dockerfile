@@ -16,7 +16,6 @@ FROM ${BASE_IMAGE}
 WORKDIR /app
 
 RUN mkdir "file"
-
 # Copy the built main file from build stage to production stage
 COPY --from=build /app/main /app/main
 
