@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
@@ -42,9 +43,9 @@ func main() {
 
 	// 获取 OSS 客户端
 	client, err := oss.New(
+		endpoint,
 		accessKeyId,
 		accessKeySecret,
-		endpoint,
 	)
 	if err != nil {
 		fmt.Println("Error creating OSS client:", err)
@@ -54,7 +55,38 @@ func main() {
 	// 创建一个通道，用于存储待上传的文件
 	files := make(chan string, concurrency)
 
-	// 遍历资源文件夹
+	// 并发上传
+	var wg sync.WaitGroup
+	wg.Add(concurrency)
+	for i := 0; i < concurrency; i++ {
+		go func() {
+			for path := range files {
+				// 获取文件名称
+				filename := filepath.Base(path)
+
+				// 拼接 OSS 对象键
+				objectKey := filepath.Join(pathPrefix, filepath.Dir(strings.TrimPrefix(path, resourceDir)), filename)
+				fmt.Println("File upload Ready", objectKey)
+				// 上传文件
+				bk, err := client.Bucket(bucketName)
+				if err != nil {
+					fmt.Println("Error uploading Bucket:", err)
+				} else {
+					err = bk.PutObjectFromFile(objectKey, path)
+					if err != nil {
+						fmt.Println("Error uploading file:", err)
+					} else {
+						fmt.Println("File uploaded successfully:", objectKey)
+					}
+
+				}
+			}
+
+			wg.Done()
+		}()
+	}
+
+	// 遍历资源文件夹，将文件路径发送到通道
 	err = filepath.Walk(resourceDir, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
@@ -62,7 +94,6 @@ func main() {
 
 		// 判断是否是文件
 		if !info.IsDir() {
-			// 将文件路径发送到通道
 			files <- path
 		}
 
@@ -74,49 +105,9 @@ func main() {
 		return
 	}
 
-	// 创建WaitGroup，用于等待所有文件上传完成
-	wg := new(sync.WaitGroup)
-	wg.Add(concurrency)
-
-	// 启动并发上传
-	for i := 0; i < concurrency; i++ {
-		go func() {
-			for path := range files {
-				// 上传文件
-				err := uploadFile(client, bucketName, path, pathPrefix)
-				if err != nil {
-					fmt.Println("Error uploading file:", err)
-				}
-			}
-
-			wg.Done()
-		}()
-	}
+	close(files)
 
 	// 等待所有文件上传完成
 	wg.Wait()
-
 	fmt.Println("All files uploaded successfully!")
-}
-
-func uploadFile(client *oss.Client, bucketName string, path string, pathPrefix string) error {
-	// 获取文件名称
-	filename := filepath.Base(path)
-
-	// 拼接 OSS 对象键
-	objectKey := filepath.Join(pathPrefix, filename)
-
-	// 创建 Bucket
-	bucket, err := client.Bucket(bucketName)
-	if err != nil {
-		return err
-	}
-
-	// 上传文件
-	err = bucket.PutObjectFromFile(objectKey, path)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
