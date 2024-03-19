@@ -116,6 +116,7 @@ func uploadFiles(c *Config, client *oss.Client) {
 func main() {
 	c := Config{}
 	c.Init()
+	fmt.Printf("Struct Config: %+v\n", c)
 	client := createOSSClient(&c)
 	uploadFiles(&c, client)
 }
