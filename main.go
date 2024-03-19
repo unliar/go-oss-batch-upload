@@ -35,7 +35,7 @@ func main() {
 	flag.Parse()
 
 	// 验证参数
-	if accessKeyId == "" || accessKeySecret == "" || endpoint == "" || resourceDir == "" || bucketName == "" {
+	if accessKeyId == "" || accessKeySecret == "" || endpoint == "" || resourceDir == "" || bucketName == "" || pathPrefix == "" {
 		fmt.Println("Error: Missing required parameters")
 		flag.Usage()
 		return
