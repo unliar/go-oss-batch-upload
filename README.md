@@ -15,7 +15,7 @@ go install github.com/unliar/go-oss-batch-upload@0.0.2
 **使用**
 
 ```dockerfile
-FROM registry.cn-shenzhen.aliyuncs.com/happysooner/go-oss-batch-upload
+FROM registry.cn-shenzhen.aliyuncs.com/happysooner/go-oss-batch-upload:$TAG
 
 # CMD
 ```
