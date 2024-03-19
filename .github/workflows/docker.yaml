@@ -1,0 +1,27 @@
+name: go
+on:
+  push:
+    tags:
+      - '*'
+jobs:
+  build:
+    name: build&&push
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: "registry.cn-shenzhen.aliyuncs.com"
+    steps:
+      - name: "复制文件"
+        uses: actions/checkout@v1
+      - name: "容器构建"
+        run: |
+          docker login --username=${{ secrets.DOCKER_USERNAME }} $REGISTRY --password=${{ secrets.DOCKER_PASSWORD }}
+          TAG="happysooner/go-oss-batch-upload:${{ github.ref#refs/tags/ }}"
+          docker build -t go-oss-batch-upload:$TAG .
+          docker tag go-oss-batch-upload:$TAG $REGISTRY/$TAG
+          docker push $REGISTRY/$TAG
+      - name: "构建失败 - 通知远浅排查问题"
+        if: failure()
+        run: curl -H "Content-Type:application/json" -X POST ${{ secrets.SEND_MAIL_API }} -d '{"text":"【基础镜像 minio-server】 构建失败", "desp":"构建失败啦! https://github.com/${{ github.repository }}/actions","to":"${{ secrets.EMAIL }}"}'
+      - name: "构建成功 - 通知远浅让他开心"
+        if: success()
+        run: curl -H "Content-Type:application/json" -X POST ${{ secrets.SEND_MAIL_API }} -d '{"text":"【基础镜像 minio-server】 优雅的构建成功~!", "desp":"镜像 registry.cn-shenzhen.aliyuncs.com/happysooner/go-oss-batch-upload:${{ github.ref#refs/tags/ }} 更新啦","to":"${{ secrets.EMAIL }}"}'
