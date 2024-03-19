@@ -14,6 +14,12 @@ go install github.com/unliar/go-oss-batch-upload@0.0.2
 
 **使用**
 
+```dockerfile
+FROM registry.cn-shenzhen.aliyuncs.com/happysooner/go-oss-batch-upload
+
+# CMD
+```
+
 ```
 go-oss-batch-upload -access-key-id your-access-key-id -access-key-secret your-access-key-secret -endpoint your-endpoint -resource-dir /path/to/resource/dir -path-prefix subdir -bucket-name my-bucket
 ```
