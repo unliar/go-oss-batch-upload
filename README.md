@@ -45,6 +45,7 @@ go-oss-batch-upload -access-key-id AKID... -access-key-secret YOUR_ACCESS_KEY_SE
 * 请确保您已安装 Golang 并将 `go` 命令添加到系统路径中。
 * 请替换命令中的参数值以匹配您的实际情况。
 * -path-prefix 不可以有前缀 / 
+* -resource-dir 需要是完整路径
 
 ### English
 
