@@ -1,4 +1,4 @@
-module github.com/unliar/go-oss-batch-uploa
+module github.com/unliar/go-oss-batch-upload
 
 go 1.22.0
 
