@@ -9,7 +9,7 @@ OSS 批量上传工具是一个 Golang 程序，用于并发上传文件到 OSS�
 **安装**
 
 ```
-go install github.com/unliar/go-oss-batch-upload@0.0.2
+go install github.com/unliar/go-oss-batch-upload@0.0.3
 ```
 
 **使用**
@@ -17,7 +17,7 @@ go install github.com/unliar/go-oss-batch-upload@0.0.2
 ```dockerfile
 FROM registry.cn-shenzhen.aliyuncs.com/happysooner/go-oss-batch-upload:$TAG
 
-# CMD
+CMD /app/main -access-key-id your-access-key-id -access-key-secret your-access-key-secret -endpoint your-endpoint -resource-dir /path/to/resource/dir -path-prefix subdir -bucket-name my-bucket
 ```
 
 ```
@@ -44,6 +44,7 @@ go-oss-batch-upload -access-key-id AKID... -access-key-secret YOUR_ACCESS_KEY_SE
 
 * 请确保您已安装 Golang 并将 `go` 命令添加到系统路径中。
 * 请替换命令中的参数值以匹配您的实际情况。
+* -path-prefix 不可以有前缀 / 
 
 ### English
 
@@ -54,7 +55,7 @@ OSS Batch Uploader is a Golang program that uploads files to OSS concurrently. I
 **Installation**
 
 ```
-go install github.com/unliar/go-oss-batch-upload@0.0.2
+go install github.com/unliar/go-oss-batch-upload@0.0.3
 ```
 
 **Usage**
@@ -74,6 +75,12 @@ oss-batch-uploader -access-key-id your-access-key-id -access-key-secret your-acc
 * `-concurrency`: The number of concurrent uploads (optional, default: 10)
 
 **Example**
+
+```dockerfile
+FROM registry.cn-shenzhen.aliyuncs.com/happysooner/go-oss-batch-upload:$TAG
+
+CMD /app/main -access-key-id your-access-key-id -access-key-secret your-access-key-secret -endpoint your-endpoint -resource-dir /path/to/resource/dir -path-prefix subdir -bucket-name my-bucket
+```
 
 ```
 go-oss-batch-upload -access-key-id AKID... -access-key-secret YOUR_ACCESS_KEY_SECRET -endpoint oss-cn-hangzhou.aliyuncs.com -resource-dir /path/to/resource/dir -path-prefix subdir -bucket-name my-bucket
