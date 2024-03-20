@@ -9,7 +9,7 @@ OSS 批量上传工具是一个 Golang 程序，用于并发上传文件到 OSS�
 **安装**
 
 ```
-go install github.com/unliar/go-oss-batch-upload@0.0.3
+go install github.com/unliar/go-oss-batch-upload@0.0.8
 ```
 
 **使用**
@@ -56,7 +56,7 @@ OSS Batch Uploader is a Golang program that uploads files to OSS concurrently. I
 **Installation**
 
 ```
-go install github.com/unliar/go-oss-batch-upload@0.0.3
+go install github.com/unliar/go-oss-batch-upload@0.0.8
 ```
 
 **Usage**
