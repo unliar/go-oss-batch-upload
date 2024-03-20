@@ -1,6 +1,6 @@
 # Set the base build image
 ARG BASE_BUILD_IMAGE=golang:1.22-alpine
-ARG BASE_IMAGE=registry.cn-shenzhen.aliyuncs.com/happysooner/golang-runtime
+ARG BASE_IMAGE=alpine
 
 # Build stage
 FROM ${BASE_BUILD_IMAGE} as build
