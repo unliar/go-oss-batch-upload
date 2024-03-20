@@ -90,6 +90,7 @@ func createOSSClient(c *Config) *oss.Client {
 
 func uploadFiles(c *Config, client *oss.Client) {
 	files := make(chan string, c.Concurrency)
+	defer close(files)
 	var wg sync.WaitGroup
 	wg.Add(c.Concurrency)
 	for i := 0; i < c.Concurrency; i++ {
@@ -108,7 +109,6 @@ func uploadFiles(c *Config, client *oss.Client) {
 	})
 	handleError(err, "Error walking directory:")
 
-	close(files)
 	wg.Wait()
 	fmt.Println("Uploaded all files successfully!")
 }
