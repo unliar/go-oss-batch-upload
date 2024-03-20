@@ -4,7 +4,7 @@
 
 **简介**
 
-OSS 批量上传工具是一个 Golang 程序，用于并发上传文件到 OSS。该程序可以从命令行或环境变量中读取配置，并支持上传到 OSS 的子目录下。
+OSS 批量上传工具是一个 Golang 程序，用于并发上传文件到 OSS。该程序可以从命令行中读取配置，并支持上传到 OSS 的子目录下。
 
 **安装**
 
@@ -51,7 +51,7 @@ go-oss-batch-upload -access-key-id AKID... -access-key-secret YOUR_ACCESS_KEY_SE
 
 **Introduction**
 
-OSS Batch Uploader is a Golang program that uploads files to OSS concurrently. It can read configuration from the command line or environment variables, and supports uploading to subdirectories under OSS.
+OSS Batch Uploader is a Golang program that uploads files to OSS concurrently. It can read configuration from the command line , and supports uploading to subdirectories under OSS.
 
 **Installation**
 
