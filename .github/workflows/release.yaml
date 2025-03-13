@@ -18,14 +18,14 @@ jobs:
         run: |
           echo "tag_name=$(echo ${{ github.ref_name }} | sed 's/refs\/tags\///')" >> $GITHUB_OUTPUT
 
-      - name: "容器构建"
-        run: |
-          docker login --username=${{ secrets.DOCKER_USERNAME }} $REGISTRY --password=${{ secrets.DOCKER_PASSWORD }}
-          TAG="happysooner/go-oss-batch-upload:${{ steps.extract_tag.outputs.tag_name }}"
-          echo $TAG
-          docker build -t go-oss-batch-upload:latest .
-          docker tag go-oss-batch-upload:latest $REGISTRY/$TAG
-          docker push $REGISTRY/$TAG
+      #   - name: "容器构建"
+      #     run: |
+      #       docker login --username=${{ secrets.DOCKER_USERNAME }} $REGISTRY --password=${{ secrets.DOCKER_PASSWORD }}
+      #       TAG="happysooner/go-oss-batch-upload:${{ steps.extract_tag.outputs.tag_name }}"
+      #       echo $TAG
+      #       docker build -t go-oss-batch-upload:latest .
+      #       docker tag go-oss-batch-upload:latest $REGISTRY/$TAG
+      #       docker push $REGISTRY/$TAG
 
       - name: "Build and Package Binaries"
         id: build_binaries
