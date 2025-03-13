@@ -44,8 +44,9 @@ jobs:
           release_name: ${{ steps.extract_tag.outputs.tag_name }} # 更简洁
           body: |
             Release notes for version ${{ steps.extract_tag.outputs.tag_name }}
-          files:
-            - release/main-*
+          files: |
+            release/main-*.exe  
+            release/main-*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
