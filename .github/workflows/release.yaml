@@ -67,8 +67,8 @@ jobs:
           msg_type: text
           content: |
             text: |
-              🐳 构建状态 - From Github Action   |
-              repository: https://github.com/${{ github.repository }} |
-              committer: https://github.com/${{ github.actor }} |
-              compare: ${{ github.event.compare }} |
+              🐳 构建状态 - From Github Action   
+              repository: https://github.com/${{ github.repository }} 
+              committer: https://github.com/${{ github.actor }} 
+              compare: ${{ github.event.compare }} 
               job status: ${{ job.status }}
