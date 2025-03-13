@@ -4,11 +4,12 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
+
+	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 )
 
 const ConcurrencyDefault = 10
@@ -90,27 +91,35 @@ func createOSSClient(c *Config) *oss.Client {
 
 func uploadFiles(c *Config, client *oss.Client) {
 	files := make(chan string, c.Concurrency)
-	defer close(files)
 	var wg sync.WaitGroup
-	wg.Add(c.Concurrency)
+	defer close(files) // 在发送完所有文件路径后关闭通道
+	// 启动 goroutine 来上传文件
 	for i := 0; i < c.Concurrency; i++ {
+		wg.Add(1) // 为每个 goroutine 添加到等待组
 		go func() {
+			defer wg.Done() // 确保在 goroutine 退出时调用 Done
 			for path := range files {
-				_ = uploadFile(client, path, c.ResourceDir, c.PathPrefix, c.BucketName)
+				if err := uploadFile(client, path, c.ResourceDir, c.PathPrefix, c.BucketName); err != nil {
+					fmt.Println("上传文件时出错:", err)
+				}
 			}
-			wg.Done()
 		}()
 	}
-	err := filepath.Walk(c.ResourceDir, func(path string, info os.FileInfo, err error) error {
-		if !info.IsDir() {
-			files <- path
-		}
-		return err
-	})
-	handleError(err, "Error walking directory:")
 
-	wg.Wait()
-	fmt.Println("Uploaded all files successfully!")
+	// 遍历目录并将文件路径发送到通道
+	err := filepath.Walk(c.ResourceDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err // 处理遍历目录时的错误
+		}
+		if !info.IsDir() {
+			files <- path // 将文件路径发送到通道
+		}
+		return nil
+	})
+	handleError(err, "遍历目录时出错:")
+
+	wg.Wait() // 等待所有 goroutine 完成
+	fmt.Println("所有文件上传成功!")
 }
 
 func main() {
