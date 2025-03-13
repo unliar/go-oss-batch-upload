@@ -60,17 +60,19 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: feishu-bot-message
+        if: always()
         uses: foxundermoon/feishu-action@v2
         with:
           url: ${{ secrets.FEISHU_BOT_WEBHOOK_URL }}
           msg_type: text
           content: |
-            🐳 构建状态 - From Github Action
+            text: |
+              🐳 构建状态 - From Github Action 
 
-            repository: https://github.com/${{ github.repository }}
-
-            committer: https://github.com/${{ github.actor }}
-
-            compare: ${{ github.event.compare }}
-
-            job status: ${{ job.status }}
+              repository: https://github.com/${{ github.repository }}
+                
+              committer: https://github.com/${{ github.actor }}
+                
+              compare: ${{ github.event.compare }}
+                
+              job status: ${{ job.status }}
