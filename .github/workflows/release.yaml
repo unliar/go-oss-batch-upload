@@ -10,13 +10,18 @@ jobs:
     env:
       REGISTRY: "registry.cn-shenzhen.aliyuncs.com"
     steps:
-      - name: "复制文件"
-        uses: actions/checkout@v1
+      - name: "Checkout code"
+        uses: actions/checkout@v4 # 使用最新版本
+
+      - name: "Extract tag name"
+        id: extract_tag
+        run: |
+          echo "tag_name=$(echo ${{ github.ref_name }} | sed 's/refs\/tags\///')" >> $GITHUB_OUTPUT
 
       - name: "容器构建"
         run: |
           docker login --username=${{ secrets.DOCKER_USERNAME }} $REGISTRY --password=${{ secrets.DOCKER_PASSWORD }}
-          TAG="happysooner/go-oss-batch-upload:${{ github.ref_name }}"
+          TAG="happysooner/go-oss-batch-upload:${{ steps.extract_tag.outputs.tag_name }}"
           echo $TAG
           docker build -t go-oss-batch-upload:latest .
           docker tag go-oss-batch-upload:latest $REGISTRY/$TAG
@@ -27,36 +32,35 @@ jobs:
           mkdir -p release
           for os in linux darwin windows; do
             for arch in amd64 arm64; do
-              GOOS=$os GOARCH=$arch go build -o release/main-$os-$arch ./...  # Adjust 'myapp' to your app's name
+              GOOS=$os GOARCH=$arch go build -o release/main-$os-$arch .   
+              chmod +x release/main-$os-$arch  
             done
           done
 
       - name: "Create GitHub Release"
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ steps.extract_tag.outputs.tag_name }}
+          release_name: ${{ steps.extract_tag.outputs.tag_name }} # 更简洁
           body: |
-            Release notes for version ${{ github.ref }}
+            Release notes for version ${{ steps.extract_tag.outputs.tag_name }}
           files:
-            - release/main-* # Include all binaries
+            - release/main-*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: feishu-bot-message
-        if: always()
         uses: foxundermoon/feishu-action@v2
         with:
           url: ${{ secrets.FEISHU_BOT_WEBHOOK_URL }}
           msg_type: text
           content: |
-            text: |
-              🐳 构建状态 - From Github Action 
+            🐳 构建状态 - From Github Action
 
-              repository: https://github.com/${{ github.repository }}
+            repository: https://github.com/${{ github.repository }}
 
-              committer: https://github.com/${{ github.actor }}
+            committer: https://github.com/${{ github.actor }}
 
-              compare: ${{ github.event.compare }}
+            compare: ${{ github.event.compare }}
 
-              job status: ${{ job.status }}
+            job status: ${{ job.status }}
