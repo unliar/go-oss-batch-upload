@@ -54,7 +54,8 @@ jobs:
           release_name: ${{ steps.extract_tag.outputs.tag_name }}
           body: |
             Release notes for version ${{ steps.extract_tag.outputs.tag_name }}
-            # Add more detailed release notes here
+            Latest commit message:
+            ${{ github.event.head_commit.message }}
           files: ${{ steps.build_binaries.outputs.files }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
