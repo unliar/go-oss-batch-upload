@@ -34,8 +34,13 @@ jobs:
           file_list=""
           for os in linux darwin windows; do
             for arch in amd64 arm64; do
-              GOOS=$os GOARCH=$arch go build -o release/main-$os-$arch . && chmod +x release/main-$os-$arch
-              file_list+="release/main-$os-$arch"$'\n'
+              if [ "$os" == "windows" ]; then
+                GOOS=$os GOARCH=$arch go build -o release/main-$os-$arch.exe . && chmod +x release/main-$os-$arch.exe
+                file_list+="release/main-$os-$arch.exe"$'\n'
+              else
+                GOOS=$os GOARCH=$arch go build -o release/main-$os-$arch . && chmod +x release/main-$os-$arch
+                file_list+="release/main-$os-$arch"$'\n'
+              fi
             done
           done
           echo "files<<EOF" >> $GITHUB_OUTPUT
