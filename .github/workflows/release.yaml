@@ -33,7 +33,8 @@ jobs:
           for os in linux darwin windows; do
             for arch in amd64 arm64; do
               GOOS=$os GOARCH=$arch go build -o release/main-$os-$arch .   
-              chmod +x release/main-$os-$arch  
+              chmod +x release/main-$os-$arch
+              echo "release/main-$os-$arch" >> $GITHUB_FILES_ENV   
             done
           done
 
@@ -44,9 +45,7 @@ jobs:
           release_name: ${{ steps.extract_tag.outputs.tag_name }} # 更简洁
           body: |
             Release notes for version ${{ steps.extract_tag.outputs.tag_name }}
-          files: |
-            release/main-*.exe
-            release/main-*.
+          files: $GITHUB_FILES_ENV
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
