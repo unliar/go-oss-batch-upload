@@ -72,7 +72,7 @@ func uploadFile(client *oss.Client, path string, resourceDir string, pathPrefix 
 
 	err = bk.PutObjectFromFile(objectKey, path)
 	if err != nil {
-		handleError(err, "Error uploading file:")
+		handleError(err, "Error uploading file:"+err.Error())
 	}
 	fmt.Println("File uploaded successfully:", objectKey)
 	return nil
